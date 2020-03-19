@@ -2,13 +2,22 @@ const express = require("express");
 const router = express.Router();
 // Load User Controller
 const adminController = require("../controllers/admin.controller");
-const { forwardAuthenticated } = require("../config/auth");
+const {
+  forwardAdminAuthenticated,
+  ensureAdminAuthenticated
+} = require("../config/auth");
 
 //Register Routes
+// Dashboard
+router.get("/dashboard", ensureAdminAuthenticated, (req, res) =>
+  res.render("admin/dashboard", {
+    user: req.user
+  })
+);
 // Login Page
-router.get("/login", forwardAuthenticated, adminController.login);
+router.get("/login", forwardAdminAuthenticated, adminController.login);
 // Register Page
-router.get("/register", forwardAuthenticated, adminController.register);
+router.get("/register", forwardAdminAuthenticated, adminController.register);
 
 // Register
 router.post("/register", adminController.registerAdmin);
